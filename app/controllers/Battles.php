@@ -32,10 +32,12 @@
 
           case 'dodge':
             $playerMsg = 'The player dodges!';
+            $player->stamina -= 1;
             break;
 
           case 'defend':
             $playerMsg = 'The player defends!';
+            $player->stamina += 2;
             break;
 
           case 'flee':

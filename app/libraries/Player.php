@@ -43,8 +43,23 @@ class Player {
   public function __set($property, $value) {
     if(property_exists($this, $property)) {
       switch($property) {
+        case 'health':
+          $this->health = $value;
+          if ($this->health > $this->maxHealth) {
+            $this->health = $this->maxHealth;
+          } else if ($this->health <= 0) {
+            $this->health = 0;
+            // You're Dead
+          }
+          break;
+
         case 'stamina':
-          $this->$property = $value;
+          $this->stamina = $value;
+          if ($this->stamina > $this->maxStamina) {
+            $this->stamina = $this->maxStamina;
+          } else if ($this->stamina < 0) {
+            $this->stamina = 0;
+          }
           break;
       }
     }
