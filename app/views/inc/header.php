@@ -3,6 +3,10 @@
     $user = $_SESSION['user'];
     $player = $_SESSION['player'];
   }
+
+  if (isset($_SESSION['enemy'])) {
+    $enemy = $_SESSION['enemy'];
+  }
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +26,7 @@
         </li>
         <?php if (isLoggedIn()) : ?>
         <li>
-          <p><?php echo $user->name; ?></p>
+          <p>Day: 1, Time: 00:00</p>
         </li>
         <?php endif; ?>
         <li>

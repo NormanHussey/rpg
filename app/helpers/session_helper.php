@@ -15,6 +15,10 @@
     }
   }
 
+  function randomFloat($min, $max) {
+      return $min + abs($max - $min) * mt_rand(0, mt_getrandmax())/mt_getrandmax();
+  }
+
   // Flash message helper
 
   // function flash($name = '', $message = '', $class='') {

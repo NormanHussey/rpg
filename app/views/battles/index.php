@@ -1,10 +1,12 @@
 <?php require APPROOT . '/views/inc/header.php'; ?>
   <div class="battleScreen">
-    <div class="battleMsg">
-      <p>An ememy approaches</p>
+    <div class="enemyStats">
+      <p><?= $enemy->name ?></p>
+      <p>Health: <?= $enemy->health . ' / ' . $enemy->maxHealth ?></p>
+      <p>Stamina: <?= $enemy->stamina . ' / ' . $enemy->maxStamina ?></p>
     </div>
-    <div class="attackLog">
-      <p id="enemyAttack">The enemy attacks!</p>
+    <div class="battleLog">
+      <p id="enemyAttack"><?= $data['enemyMsg'] ?></p>
       <p id="playerAttack"><?= $data['playerMsg'] ?></p>
     </div>
     <form class="battleOptions" action="<?php echo URLROOT; ?>/battles/turn" method="POST">

@@ -25,4 +25,11 @@
       $this->db->execute();
     }
 
+    public function getEnemy($id) {
+      $this->db->query('SELECT * FROM enemies WHERE id = :id');
+      $this->db->bind(':id', $id);
+      $row = $this->db->single();
+      return $row;
+    }
+
   }

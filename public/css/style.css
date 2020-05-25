@@ -165,7 +165,14 @@ footer .wrapper {
   font-size: 2rem;
 }
 
-.attackLog {
+.enemyStats {
+  width: 50%;
+  background-color: lightgrey;
+  text-align: center;
+  border: 1px solid black;
+}
+
+.battleLog {
   margin: 2.5% 0;
   width: 100%;
   height: 100%;
@@ -175,7 +182,7 @@ footer .wrapper {
   align-items: center;
 }
 
-.attackLog p {
+.battleLog p {
   flex-basis: 45%;
   width: 75%;
   padding: 2.5%;

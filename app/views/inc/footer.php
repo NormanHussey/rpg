@@ -4,9 +4,12 @@
     <footer>
       <div class="wrapper">
         <div class="cell">
-          <p>Level: <?= $player->level ?></p>
+          <p><?= $player->name ?></p>
           <p>Health: <?= $player->health . ' / ' . $player->maxHealth ?> </p>
           <p>Stamina: <?= $player->stamina . ' / ' . $player->maxStamina ?> </p>
+        </div>
+        <div class="cell">
+          <p>Level: <?= $player->level ?></p>
           <p>XP: <?= $player->xp ?></p>
         </div>
         <div class="cell">

@@ -7,8 +7,11 @@
     }
 
     public function index() {
+      $enemy = $this->userModel->getEnemy(1);
+      $_SESSION['enemy'] = new Enemy($enemy->name, $enemy->health, $enemy->stamina, $enemy->xp, $enemy->strength, $enemy->agility, $enemy->dexterity, $enemy->opener);
       $data = [
-        'playerMsg' => 'Choose your move.'
+        'playerMsg' => 'Choose your move.',
+        'enemyMsg' => $enemy->opener
       ];
       $this->view('battles/index', $data);
     }
@@ -16,18 +19,27 @@
     public function turn() {
       if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $player = $_SESSION['player'];
+        $enemy = $_SESSION['enemy'];
+
+        $enemyMove = $enemy->chooseMove();
+        $player->health -= $enemyMove[0];
+        $enemy->stamina -= $enemyMove[0];
+        $enemyMsg = $enemyMove[1];
+
         $playerMsg = '';
 
         switch($_POST['playerChoice']) {
 
           case 'highAttack':
-            $playerMsg = 'The player does a high attack!';
-            $player->stamina -= $player->strength;
+            $move = $player->highAttack();
+            $playerMsg = $move[1];
+            $enemy->health -= $move[0];
             break;
 
           case 'lowAttack':
-            $playerMsg = 'The player does a low attack!';
-            $player->stamina -= ceil($player->strength / 2);
+            $move = $player->lowAttack();
+            $playerMsg = $move[1];
+            $enemy->health -= $move[0];
             break;
 
           case 'dodge':
@@ -47,7 +59,8 @@
         }
         
         $data = [
-          'playerMsg' => $playerMsg
+          'playerMsg' => $playerMsg,
+          'enemyMsg' => $enemyMsg
         ];
 
         $this->userModel->updatePlayerData();
@@ -55,7 +68,7 @@
         $this->view('battles/index', $data);
 
       } else {
-
+        $this->view('battles/index');
       }
     }
   }

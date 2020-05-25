@@ -44,7 +44,7 @@ class Player {
     if(property_exists($this, $property)) {
       switch($property) {
         case 'health':
-          $this->health = $value;
+          $this->health = round($value, 2);
           if ($this->health > $this->maxHealth) {
             $this->health = $this->maxHealth;
           } else if ($this->health <= 0) {
@@ -54,7 +54,7 @@ class Player {
           break;
 
         case 'stamina':
-          $this->stamina = $value;
+          $this->stamina = round($value, 2);
           if ($this->stamina > $this->maxStamina) {
             $this->stamina = $this->maxStamina;
           } else if ($this->stamina < 0) {
@@ -65,7 +65,18 @@ class Player {
     }
   }
 
-  public function takeDamage($damage) {
-    $this->health -= $damage;
+  public function highAttack() {
+    $damage = round(randomFloat($this->strength * 0.8, $this->strength * 1.2), 2);
+    $msg = "You unleash a high attack dealing $damage damage!";
+    $this->stamina -= $damage;
+    return [$damage, $msg];
   }
+
+  public function lowAttack() {
+    $damage = round(randomFloat($this->strength / 2 * 0.8, $this->strength / 2 * 1.2), 2);
+    $msg = " You lunge with a low attack dealing $damage damage!";
+    $this->stamina -= $damage;
+    return [$damage, $msg];
+  }
+
 }
