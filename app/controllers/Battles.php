@@ -16,47 +16,109 @@
       $this->view('battles/index', $data);
     }
 
+    public function getPlayerMove($choice) {
+      $player = $_SESSION['player'];
+      $enemy = $_SESSION['enemy'];
+
+      switch($choice) {
+        case 'highAttack':
+          return $player->highAttack($enemy);
+          break;
+
+        case 'lowAttack':
+          return $player->lowAttack();
+          break;
+
+        case 'dodge':
+          return $player->dodge($enemy);
+          break;
+
+        case 'defend':
+          return $player->defend();
+          break;
+
+        case 'flee':
+          return [false, 'You attempt to flee but fail!'];
+          break;
+      }
+    }
+
+    public function processEnemyMove() {
+
+    }
+
     public function turn() {
       if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $player = $_SESSION['player'];
         $enemy = $_SESSION['enemy'];
+        $choice = $_POST['playerChoice'];
 
-        $enemyMove = $enemy->chooseMove();
-        $player->health -= $enemyMove[0];
-        $enemy->stamina -= $enemyMove[0];
+        $playerMove = $this->getPlayerMove($choice);
+        $enemyChoice = $enemy->chooseMove();
+        $enemyMove = $enemy->processChoice($enemyChoice);
+
+        $playerMsg = $playerMove[1];
         $enemyMsg = $enemyMove[1];
 
-        $playerMsg = '';
-
-        switch($_POST['playerChoice']) {
-
-          case 'highAttack':
-            $move = $player->highAttack();
-            $playerMsg = $move[1];
-            $enemy->health -= $move[0];
+        // if ($player->agility >= $enemy->agility) { // player goes first
+          switch($choice) {
+            case 'highAttack':
+            case 'lowAttack':
+              if ($enemyChoice === 0 || $enemyChoice === 1) { // highAttack or lowAttack
+                $enemy->health -= $playerMove[0];
+                $player->health -= $enemyMove[0];
+              } else if ($enemyChoice === 2) { // dodge
+                if (!$enemyMove[0] || $choice = 'lowAttack') {
+                  $enemy->health -= $playerMove[0];
+                  $enemyMsg = "$enemy->name tried to dodge but failed.";
+                }
+              } else if ($enemyChoice === 3) { // defend
+                $enemy->health -= $playerMove[0] * $enemyMove[0];
+              }
             break;
 
-          case 'lowAttack':
-            $move = $player->lowAttack();
-            $playerMsg = $move[1];
-            $enemy->health -= $move[0];
-            break;
+            case 'dodge':
+              if ($enemyChoice === 0) { // highAttack
+                if (!$playerMove[0]) {
+                  $player->health -= $enemyMove[0];
+                }
+              } else if ($enemyChoice === 1) { // lowAttack
+                $player->health -= $enemyMove[0];
+                if ($playerMove[0]) {
+                  $playerMsg = 'You tried to dodge but failed.';
+                }
+              } else if ($enemyChoice === 2) { // dodge
+                $playerMsg = 'You successfully an attack that never came.';
+                $enemyMsg = 'But the enemy dodged as well so you both look like fools.';
+              } else if ($enemyChoice === 3) { // defend
+                $playerMsg = 'You successfully an attack that never came.';
+              }
+              break;
 
-          case 'dodge':
-            $playerMsg = 'The player dodges!';
-            $player->stamina -= 1;
-            break;
+            case 'defend':
+              if ($enemyChoice === 0 || $enemyChoice === 1) { // highAttack or lowAttack
+                $player->health -= $enemyMove[0] * $playerMove[0];
+              }
+              break;
 
-          case 'defend':
-            $playerMsg = 'The player defends!';
-            $player->stamina += 2;
-            break;
+            case 'flee':
+              if (!$playerMove[0]) {
+                if ($enemyChoice === 0 || $enemyChoice === 1) { // highAttack or lowAttack
+                  $player->health -= $enemyMove[0];
+                }
+              } else {
+                $playerMsg = 'You successfully fled the fight.';
+              }
+              break;
 
-          case 'flee':
-            $playerMsg = 'The player attempts to flee!';
-            break;
-     
-        }
+          }
+        // } else { // enemy goes first
+
+        // }
+
+        // $player->health -= $enemyMove[0];
+        // $enemy->stamina -= $enemyMove[0];
+      
         
         $data = [
           'playerMsg' => $playerMsg,

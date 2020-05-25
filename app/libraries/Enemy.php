@@ -69,9 +69,8 @@
       return [$damage, $msg];
     }
 
-    public function chooseMove() {
-      $move = mt_rand(0, 1);
-      switch ($move) {
+    public function processChoice($choice) {
+      switch ($choice) {
         case 0: // High attack
           return $this->highAttack();
           break;
@@ -89,6 +88,10 @@
           break;
 
       }
+    }
+
+    public function chooseMove() {
+      return mt_rand(0, 1);
     }
 
   

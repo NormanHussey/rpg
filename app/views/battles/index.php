@@ -12,7 +12,7 @@
     <form class="battleOptions" action="<?php echo URLROOT; ?>/battles/turn" method="POST">
       <ul>
         <li>
-          <input class="hidden" type="radio" name="playerChoice" id="highAttack" value="highAttack">
+          <input class="hidden" type="radio" name="playerChoice" id="highAttack" value="highAttack" required>
           <label for="highAttack" class="button">High Attack</label>
         </li>
         <li>
